@@ -1,6 +1,6 @@
 
 import sys
-from cassandra.cluster import cluster
+from cassandra.cluster import Cluster
 from cassandra.query import SimpleStatement
 from cassandra import ConsistencyLevel
 import faker
@@ -26,7 +26,7 @@ class cass(object):
         #INSERT TABELA Aluno
         start_time = time.time()
         for i in range(int(sys.argv[2])):
-            self.session.execute(f"INSERT INTO Keyspace.Aluno(IdAluno, Nome, Sexo, Endereco, Cidade, UF) VALUES(i, {fake.name()}, {fake.random_element(elements=('M', 'F'))}, {fake.address()}, {fake.city()}, {fake.state_abbr()})")
+            self.session.execute(f"INSERT INTO Keyspace.Aluno(IdAluno, Nome, Sexo, Endereco, Cidade, UF) VALUES(i, {fake.name()}, {fake.random_element(elements=['M', 'F'])}, {fake.address()}, {fake.city()}, {fake.state_abbr()})")
         end_time = time.time()
         print("Insert time TABLE Aluno: " + str(start_time-end_time))
         insert_time = start_time-end_time
@@ -50,7 +50,7 @@ class cass(object):
         #INSERT TABELA Curso
         start_time = time.time()
         for i in range(int(sys.argv[2])):
-            self.session.execute(f"INSERT INTO Keyspace.Curso(IdCurso, Nome, Sigla, Titulacao, Campus) VALUES(i, {fake.random_element(elements='Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica')}, {fake.random_element(elements = 'CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM')}, {fake.random_element(elements = 'Bacharelado', 'Tecnologo', 'Licenciatura')}, {fake.random_element(elements = 'Alegrete', 'Bage', 'Caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja')})")
+            self.session.execute(f"INSERT INTO Keyspace.Curso(IdCurso, Nome, Sigla, Titulacao, Campus) VALUES(i, {fake.random_element(elements=['Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica'])}, {fake.random_element(elements = ['CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM'])}, {fake.random_element(elements = ['Bacharelado', 'Tecnologo', 'Licenciatura'])}, {fake.random_element(elements = ['Alegrete', 'Bage', 'Caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja'])})")
         end_time = time.time()
         print("Insert time TABLE Curso: " + str(start_time-end_time))
         insert_time += start_time-end_time
@@ -64,7 +64,7 @@ class cass(object):
         #UPDATE TABELA Aluno
         start_time = time.time()
         for i in range(int(sys.argv[2])):
-            self.session.execute(f"UPDATE Keyspace.Aluno SET Nome = {fake.name()}, Sexo = {fake.random_element(elements=('M', 'F'))}, Endereco = {fake.address()}, Cidade = {fake.city()}, UF = {fake.state_abbr()} WHERE IdAluno = {fake.random_int(min=1, max=int(sys.argv[2]))}")
+            self.session.execute(f"UPDATE Keyspace.Aluno SET Nome = {fake.name()}, Sexo = {fake.random_element(elements=['M', 'F'])}, Endereco = {fake.address()}, Cidade = {fake.city()}, UF = {fake.state_abbr()} WHERE IdAluno = {fake.random_int(min=1, max=int(sys.argv[2]))}")
         end_time = time.time()
         print("Update time TABLE Aluno: " + str(start_time-end_time))
         update_time = start_time-end_time
@@ -88,7 +88,7 @@ class cass(object):
         #UPDATE TABELA Curso
         start_time = time.time()
         for i in range(int(sys.argv[2])):
-            self.session.execute(f"UPDATE Keyspace.Curso SET Nome = {fake.random_element(elements='Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica')}, Sigla = {fake.random_element(elements = 'CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM')}, Titulacao = {fake.random_element(elements = 'Bacharelado', 'Tecnologo', 'Licenciatura')}, Campus = {fake.random_element(elements = 'Alegrete', 'Bage', 'Caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja')} WHERE IdAluno = {fake.random_int(min=1, max=int(sys.argv[2]))}")
+            self.session.execute(f"UPDATE Keyspace.Curso SET Nome = {fake.random_element(elements=['Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica'])}, Sigla = {fake.random_element(elements =['CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM'])}, Titulacao = {fake.random_element(elements = ['Bacharelado', 'Tecnologo', 'Licenciatura'])}, Campus = {fake.random_element(elements = ['Alegrete', 'Bage', 'Caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja'])} WHERE IdAluno = {fake.random_int(min=1, max=int(sys.argv[2]))}")
         end_time = time.time()
         print("Update time TABLE Curso: " + str(start_time-end_time))
         update_time += start_time-end_time
