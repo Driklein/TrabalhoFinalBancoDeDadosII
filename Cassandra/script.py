@@ -58,7 +58,6 @@ def CreateTables():
         )
     """)
 
-
 def Inserts():
     #INSERT TABELA aluno 
     start_time = time.time()
@@ -85,10 +84,13 @@ def Inserts():
 
     #INSERT TABELA alunocurso
     start_time = time.time()
+
+    valoridcurso = fake.random_int(min=1, max=7)
+
     for i in range(int(sys.argv[1])):
         session.execute(f"""
             INSERT INTO alunocurso(idaluno, idcurso, curriculo, creditosvencidos) 
-            VALUES({i}, {fake.random_int(min=1, max=7)}, {fake.random_int(min=100001, max=199999)}, {fake.random_int(min=1, max=1000)})
+            VALUES({i}, {valoridcurso}, {fake.random_int(min=100001, max=199999)}, {fake.random_int(min=1, max=1000)})
         """)
     end_time = time.time()
     print("Insert time TABLE alunocurso: " + str(start_time-end_time))
@@ -99,7 +101,7 @@ def Inserts():
     for i in range(int(sys.argv[1])):
         session.execute(f"""
             INSERT INTO curso(idcurso, nome, sigla, titulacao, campus) 
-            VALUES({i}, '{fake.random_element(elements=['ciencia da computacao','Engenharia Agricola', 'Engenharia civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica'])}', '{fake.random_element(elements = ['CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM'])}', '{fake.random_element(elements = ['Bacharelado', 'Tecnologo', 'Licenciatura'])}', '{fake.random_element(elements = ['Alegrete', 'Bage', 'caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja'])}')
+            VALUES({valoridcurso}, '{fake.random_element(elements=['Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica'])}', '{fake.random_element(elements = ['CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM'])}', '{fake.random_element(elements = ['Bacharelado', 'Tecnologo', 'Licenciatura'])}', '{fake.random_element(elements = ['Alegrete', 'Bage', 'caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja'])}')
         """)
     end_time = time.time()
     print("Insert time TABLE curso: " + str(start_time-end_time))
@@ -118,44 +120,110 @@ def Updates():
             sexo = '{fake.random_element(elements=['M', 'F'])}', 
             endereco = '{fake.address()}', cidade = '{fake.city()}', 
             uf = '{fake.state_abbr()}' 
-            WHERE idaluno = '{fake.random_int(min=1, max=int(sys.argv[1]))}'
+            WHERE idaluno = {fake.random_int(min=1, max=int(sys.argv[1]))}
         """)
     end_time = time.time()
-    print("Update time TABLE Aluno: " + str(start_time-end_time))
+    print("Update time TABLE aluno: " + str(start_time-end_time))
     update_time = start_time-end_time
 
-    #UPDATE TABELA AlunoDetalhe
+    #UPDATE TABELA alunodetalhe
     start_time = time.time()
     for i in range(int(sys.argv[1])):
-        session.execute(f"UPDATE TrabalhoFinal.AlunoDetalhe SET  DataNasc = '{fake.date_of_birth(minimum_age=18, maximum_age=30)}', RendaFamiliar = {fake.random_int(min=1000, max=5000)}, NotaEnem = {fake.random_int(min=0, max=1000)} WHERE IdAluno = {fake.random_int(min=1, max=int(sys.argv[1]))}")
+        session.execute(f"""
+            UPDATE alunodetalhe SET  
+            datanasc = '{fake.date_of_birth(minimum_age=18, maximum_age=30)}', 
+            rendafamiliar = {fake.random_int(min=1000, max=5000)}, 
+            notaenem = {fake.random_int(min=0, max=1000)} 
+            WHERE idaluno = {fake.random_int(min=1, max=int(sys.argv[1]))}
+        """)
     end_time = time.time()
-    print("Update time TABLE AlunoDetalhe: " + str(start_time-end_time)) 
+    print("Update time TABLE alunodetalhe: " + str(start_time-end_time)) 
     update_time += start_time-end_time
 
-    #UPDATE TABELA AlunoCurso
+    #UPDATE TABELA alunocurso
     start_time = time.time()
     for i in range(int(sys.argv[1])):
-        session.execute(f"UPDATE TrabalhoFinal.AlunoCurso SET Curriculo = {fake.random_int(min=100001, max=199999)}, CreditosVencidos = {fake.random_int(min=1, max=1000)} WHERE IdAluno = {fake.random_int(min=1, max=int(sys.argv[1]))}")
+        session.execute(f"""
+            UPDATE alunocurso SET
+            curriculo = {fake.random_int(min=100001, max=199999)}, 
+            creditosvencidos = {fake.random_int(min=1, max=1000)} 
+            WHERE idaluno = {fake.random_int(min=1, max=int(sys.argv[1]))} AND idcurso = {fake.random_int(min=1, max=7)}
+        """)
     end_time = time.time()
     update_time += start_time-end_time
-    print("Update time TABLE AlunoCurso: " + str(start_time-end_time))
+    print("Update time TABLE alunocurso: " + str(start_time-end_time))
 
-    #UPDATE TABELA Curso
+    #UPDATE TABELA curso
     start_time = time.time()
     for i in range(int(sys.argv[1])):
-        session.execute(f"UPDATE TrabalhoFinal.Curso SET Nome = '{fake.random_element(elements=['Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica'])}', Sigla = '{fake.random_element(elements =['CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM'])}', Titulacao = '{fake.random_element(elements = ['Bacharelado', 'Tecnologo', 'Licenciatura'])}', Campus = '{fake.random_element(elements = ['Alegrete', 'Bage', 'Caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja'])}' WHERE IdAluno = '{fake.random_int(min=1, max=int(sys.argv[1]))}'")
+        session.execute(f"""
+            UPDATE curso SET 
+            nome = '{fake.random_element(elements=['Ciencia da Computacao','Engenharia Agricola', 'Engenharia Civil', 'Engenharia de Software', 'Engenharia de Telecomunicacoes', 'Engenharia Eletrica', 'Engenharia Mecanica'])}', 
+            sigla = '{fake.random_element(elements =['CC', 'EA', 'EC', 'ES', 'ET', 'EE', 'EM'])}', 
+            titulacao = '{fake.random_element(elements = ['Bacharelado', 'Tecnologo', 'Licenciatura'])}', 
+            campus = '{fake.random_element(elements = ['Alegrete', 'Bage', 'Caçapava do Sul','Dom Pedrito', 'Itaqui', 'Jaguarao','Santana do Livramento', 'Sao Borja'])}' 
+            WHERE idcurso = {fake.random_int(min=1, max=7)}
+        """)
     end_time = time.time()
-    print("Update time TABLE Curso: " + str(start_time-end_time))
+    print("Update time TABLE curso: " + str(start_time-end_time))
     update_time += start_time-end_time
 
     update_time = update_time/4
-    print("Media dos Updates: " + str(start_time-end_time))
+    print("Media dos Updates: " + str(update_time))
 
+def Deletes():
+    #DELETE TABELA aluno
+    start_time = time.time()
+    for i in range(int(sys.argv[1])):
+        session.execute(f"""
+            DELETE FROM aluno  
+            WHERE idaluno = {fake.random_int(min=1, max=int(sys.argv[1]))}
+        """)
+    end_time = time.time()
+    print("Delete time TABLE aluno: " + str(start_time-end_time))
+    delete_time = start_time-end_time
+
+    #DELETE TABELA alunodetalhe
+    start_time = time.time()
+    for i in range(int(sys.argv[1])):
+        session.execute(f"""
+            DELETE FROM alunodetalhe
+            WHERE idaluno = {fake.random_int(min=1, max=int(sys.argv[1]))}
+        """)
+    end_time = time.time()
+    print("Delete time TABLE alunodetalhe: " + str(start_time-end_time))
+    delete_time = start_time-end_time
+
+    #DELETE TABELA alunocurso
+    start_time = time.time()
+    for i in range(int(sys.argv[1])):
+        session.execute(f"""
+            DELETE FROM alunocurso
+            WHERE idaluno = {fake.random_int(min=1, max=int(sys.argv[1]))}
+        """)
+    end_time = time.time()
+    print("Delete time TABLE alunocurso: " + str(start_time-end_time))
+    delete_time = start_time-end_time
+
+    #DELETE TABELA curso
+    start_time = time.time()
+    for i in range(int(sys.argv[1])):
+        session.execute(f"""
+            DELETE FROM curso
+            WHERE idcurso = {fake.random_int(min=1, max=7)}
+        """)
+    end_time = time.time()
+    print("Delete time TABLE curso: " + str(start_time-end_time))
+    delete_time = start_time-end_time
+
+    delete_time = delete_time/4
+    print("Media dos Deletes: " + str(delete_time))
 
 def main():
     CreateTables()
     Inserts()
     Updates()
+    Deletes()
     cluster.shutdown()
 
 if __name__ == "__main__":
